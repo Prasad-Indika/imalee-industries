@@ -3,9 +3,13 @@ import { useRouter } from 'next/navigation';
 import React from 'react'
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
+import { useDispatch, useSelector } from 'react-redux';
+import { getAllUsers } from '@/service/User';
 
 export default function LoginHome() {
+    const dispatch = useDispatch()
     const router = useRouter();
+    const allUsersData = useSelector((state=>state.usersSlice.user))
 
     const handleLogin = ()=>{
         localStorage.setItem('token','100')
@@ -34,10 +38,21 @@ export default function LoginHome() {
             <Button 
                 className='w-full'
                 onClick={()=>{
-                    handleLogin();
+                    //handleLogin();
+                    console.log(allUsersData?.data);
+                    
                 }}
 
                 >Sign in</Button>
+        </div>
+        <div>
+            <Button 
+                className='w-full'
+                onClick={()=>{
+                    dispatch(getAllUsers());
+                }}
+
+                >Get</Button>
         </div>
     </div>
   )

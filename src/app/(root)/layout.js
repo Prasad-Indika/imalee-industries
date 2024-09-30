@@ -1,6 +1,7 @@
 'use client'
 import Sidebar from '@/components/Navbar/sidebar'
 import TopBar from '@/components/Navbar/topbar'
+import ReduxProvider from '@/provider/ReduxProvider'
 import { redirect } from 'next/navigation'
 import React from 'react'
 
@@ -16,7 +17,9 @@ export default function RootLayout({ children }) {
         <div className="flex size-full flex-col gap-4 p-4 bg-blue-50">
             <TopBar/>
             <div className='flex-grow  rounded-lg bg-white p-4'>
+              <ReduxProvider>
                 {children}
+              </ReduxProvider>
             </div>
         </div>
     </main>
