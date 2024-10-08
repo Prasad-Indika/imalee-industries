@@ -12,10 +12,17 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { saveCustomer } from "@/service/Customer";
 
 import { Formik } from "formik";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 export function ModalCustomerAddUpdate({ visible, onClose }) {
+
+  const dispatch = useDispatch();
+  const [loader,setLoader] = useState(false)
+  const saveCustomerData = useSelector((state)=>state.saveCustomerSlice.customer);
 
   const validateFields = (values)=>{
     const errors = {};
@@ -54,13 +61,23 @@ export function ModalCustomerAddUpdate({ visible, onClose }) {
   }
 
   const handleSubmit = (values, { setSubmitting })=>{
-
-    setTimeout(() => {
-      alert(JSON.stringify(values, null, 2));
-      setSubmitting(false);
-    }, 400);
-
+    setLoader(true);
+    dispatch(saveCustomer(values))
+    setSubmitting(false);
   }
+
+  useEffect(()=>{
+    if(loader){
+      if(saveCustomerData.isSuccess && !saveCustomerData.isLoading){
+          //dispatch(fetchProducts())
+          setLoader(false);
+          onClose();
+      }else{
+          console.log("data Not saved..");
+          setLoader(false);
+      }
+    }
+  },[saveCustomerData.data,saveCustomerData.errorMessage])
 
 
 

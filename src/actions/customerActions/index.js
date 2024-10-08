@@ -33,3 +33,28 @@ export async function savecustomerToDB(customer){
     }
 }
 
+export async function getAllCustomersFromDB(){
+    try {
+        await connectToDB();
+        const customers = await Customer.find();
+        if(customers){
+            return {
+                success:true,
+                data:JSON.parse(JSON.stringify(customers))
+            }
+        }else {
+            return {
+                success:false,
+                message:'Error. Please try again'
+            }
+        }
+    } catch (error) {
+        return {
+            success:false,
+            message:error.message
+        }
+    }
+}
+
+
+
