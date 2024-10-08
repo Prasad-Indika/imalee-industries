@@ -1,13 +1,15 @@
 'use client'
-import React from 'react'
+import React, { useState } from 'react'
 import { Button } from '../ui/button'
 import AppButton from '@/common/components/AppButton'
 import { useDispatch } from 'react-redux'
 import { saveUser } from '@/service/User'
+import { ModalUserAddUpdate } from '../ModalUserAddUpdate'
 
 export default function UserHome() {
 
   const dispatch = useDispatch();
+  const [visible,setVisible] = useState(false)
 
   const handleSaveUser = ()=>{
     const user = {
@@ -31,11 +33,20 @@ export default function UserHome() {
             <AppButton 
                 name={'Add New User'}
                 onClick={()=>{
-                    handleSaveUser();
+                    //handleSaveUser();
+                    setVisible(true)
                 }}
                 
             />
         </div>
+
+
+        {visible && 
+          <ModalUserAddUpdate
+            visible={visible}
+            onClose={()=>{setVisible(false)}}
+          />
+        }
 
     </div>
   )
