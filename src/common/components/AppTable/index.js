@@ -11,25 +11,26 @@ import {
 } from "@/components/ui/table"
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { FiArrowLeft ,FiArrowRight } from "react-icons/fi";
 
 export default function AppTable({columns,data}) {
-  
-    const [tableData, setTableData] = useState(data);
+ 
+    const [searchQuery, setSearchQuery] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const pageSize = 3;
 
     const handleSearch = (event) => {
-        const search = event.target.value.toLowerCase();
-        const filteredArr = data?.filter(obj =>
-            Object.values(obj).some(value => String(value).toLowerCase().includes(search))
-        );
-        setTableData(filteredArr);
-        setCurrentPage(1);
+         setSearchQuery(event.target.value)
+         setCurrentPage(1)
     };
 
+    const filteredData = data?.filter(obj =>
+        Object.values(obj).some(value => String(value).toLowerCase().includes(searchQuery.toLowerCase()))
+    );
+
   
-    const pageCount = Math.ceil(tableData.length / pageSize);
-    const paginatedData = tableData.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+    const pageCount = Math.ceil(data.length / pageSize);
+    const paginatedData = filteredData.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
     const handlePrevious = () => {
         if (currentPage > 1) {
@@ -62,9 +63,14 @@ export default function AppTable({columns,data}) {
                 </TableBody>
             </Table>
             <TableFooter>
-                <Button onClick={handlePrevious} disabled={currentPage === 1}>Previous</Button>
-                <span> Page {currentPage} of {pageCount} </span>
-                <Button onClick={handleNext} disabled={currentPage === pageCount}>Next</Button>
+                <div className='flex gap-2'>
+                     {/* <Button onClick={handlePrevious} disabled={currentPage === 1}>Previous</Button> */}
+                    <FiArrowLeft onClick={()=>{if(currentPage!==1){handlePrevious()}}} />
+                    <span className='text-sm'> Page {currentPage} of {pageCount} </span>
+                    {/* <Button onClick={handleNext} disabled={currentPage === pageCount}>Next</Button> */}
+                    <FiArrowRight onClick={()=>{if(currentPage!==pageCount){handleNext()}}}/>
+                </div>
+               
             </TableFooter>
         </>
     )

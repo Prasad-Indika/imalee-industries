@@ -1,15 +1,23 @@
 'use client'
-import React, { useState } from 'react'
-import { Button } from '../ui/button'
+import React, { useEffect, useState } from 'react'
 import AppButton from '@/common/components/AppButton'
 import { ModalCustomerAddUpdate } from '../ModalCustomerAddUpdate';
 import AppTable from '@/common/components/AppTable';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { deleteCustomer, getAllCustomer } from '@/service/Customer';
+import { AiOutlineDelete ,AiOutlineEdit } from "react-icons/ai";
 
 export default function CustomerHome() {
 
   const [visible,setVisible] = useState(false);
-
+  const [loader,setLoader] = useState(false);
+  const [editModalVisible,setEditModalVisible] = useState(false);
+  const [selectedCustomer,setSelectedCustomer] = useState({});
+  const [customerTableData,setCustomerTableData] = useState([]);
+  const customerData = useSelector((state)=>state.customersSlice.customer)
+  const deleteCustomerData = useSelector((state)=>state.deleteCustomerSlice.customer)
+  const dispatch = useDispatch();
+  
   const columns = [
       {label:"Full Name",field:"fullName"},
       {label:"Contact No",field:"contactNo"},
@@ -18,17 +26,62 @@ export default function CustomerHome() {
       {label:"Action",field:"action"}
     ]
 
-  const users = [
-    { id:1 , fullName: "Prasad Indika", contactNo: "0770856422", email: "prasad@gmail.com", address: "Wennappuwa", action: (<><Button> Edit </Button><Button> Delete </Button></>) },
-    { id:2 , fullName: "Raveen Yasintha", contactNo: "0770856422", email: "prasad@gmail.com", address: "Wennappuwa", action: (<><Button> Edit </Button><Button> Delete </Button></>) },
-    { id:3 , fullName: "Piyumal Fernando", contactNo: "0770856422", email: "prasad@gmail.com", address: "Wennappuwa", action: (<><Button> Edit </Button><Button> Delete </Button></>) },
-    { id:4 , fullName: "Kasun Delgolla", contactNo: "0770856422", email: "prasad@gmail.com", address: "Wennappuwa", action: (<><Button> Edit </Button><Button> Delete </Button></>) },
-    { id:5 , fullName: "Jeewa", contactNo: "0770856422", email: "prasad@gmail.com", address: "Wennappuwa", action: (<><Button> Edit </Button><Button> Delete </Button></>) },
-    { id:6 , fullName: "Thushan", contactNo: "0770856422", email: "prasad@gmail.com", address: "Wennappuwa", action: (<><Button> Edit </Button><Button> Delete </Button></>) },
-    { id:7 , fullName: "Raavi", contactNo: "0770856422", email: "prasad@gmail.com", address: "Wennappuwa", action: (<><Button> Edit </Button><Button> Delete </Button></>) },
-    
+  // const users = [
+  //   { id:1 , fullName: "Prasad Indika", contactNo: "0770856422", email: "prasad@gmail.com", address: "Wennappuwa", action: (<><Button> Edit </Button><Button> Delete </Button></>) },
+  //   { id:2 , fullName: "Raveen Yasintha", contactNo: "0770856422", email: "prasad@gmail.com", address: "Wennappuwa", action: (<><Button> Edit </Button><Button> Delete </Button></>) },
+  //   { id:3 , fullName: "Piyumal Fernando", contactNo: "0770856422", email: "prasad@gmail.com", address: "Wennappuwa", action: (<><Button> Edit </Button><Button> Delete </Button></>) },
+  //   { id:4 , fullName: "Kasun Delgolla", contactNo: "0770856422", email: "prasad@gmail.com", address: "Wennappuwa", action: (<><Button> Edit </Button><Button> Delete </Button></>) },
+  //   { id:5 , fullName: "Jeewa", contactNo: "0770856422", email: "prasad@gmail.com", address: "Wennappuwa", action: (<><Button> Edit </Button><Button> Delete </Button></>) },
+  //   { id:6 , fullName: "Thushan", contactNo: "0770856422", email: "prasad@gmail.com", address: "Wennappuwa", action: (<><Button> Edit </Button><Button> Delete </Button></>) },
+  //   { id:7 , fullName: "Raavi", contactNo: "0770856422", email: "prasad@gmail.com", address: "Wennappuwa", action: (<><Button> Edit </Button><Button> Delete </Button></>) },
+  
+  // ];
 
-  ];
+  const handleEdit = (val)=>{
+    setEditModalVisible(true);
+    setSelectedCustomer(val)
+  }
+
+  const handleDelete = (id)=>{
+    setLoader(true);
+    dispatch(deleteCustomer(id))
+  }
+
+  useEffect(()=>{
+    dispatch(getAllCustomer())
+  },[])
+
+  useEffect(()=>{
+    if(customerData.isSuccess){
+        const data = customerData?.data;
+        if(Array.isArray(data)){
+            const array = data.map((val,index)=>({
+              id:index,
+              fullName:val.fullName,
+              contactNo:val.contactNo,
+              email:val.email,
+              address:val.address,
+              action:(<>
+                <div className='flex gap-3'>
+                  <AiOutlineEdit size={"20px"} onClick={()=>{handleEdit(val)}} />
+                  <AiOutlineDelete size={"20px"} onClick={()=>{handleDelete(val._id)}}/>
+                </div>
+              </>)
+            }))
+          setCustomerTableData(array);     
+        }
+    }
+    
+},[customerData.data,customerData.isSuccess])
+
+useEffect(()=>{
+  if(loader){
+      dispatch(getAllCustomer())
+      setLoader(false);
+  }else{
+    setLoader(false);
+  }
+},[deleteCustomerData?.data])
 
   
   return (
@@ -45,13 +98,22 @@ export default function CustomerHome() {
         </div>
         
         <div>
-            <AppTable columns={columns} data={users}/>
+            <AppTable columns={columns} data={customerTableData}/>
         </div>
 
         {visible && 
           <ModalCustomerAddUpdate
             visible={visible}
             onClose={()=>{setVisible(false)}}
+          />
+        }
+
+        {editModalVisible && 
+          <ModalCustomerAddUpdate
+            visible={editModalVisible}
+            onClose={()=>{setEditModalVisible(false)}}
+            edit={true}
+            customer={selectedCustomer}
           />
         }
     </div>

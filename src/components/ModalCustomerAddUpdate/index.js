@@ -1,4 +1,3 @@
-import { DropDown } from "@/common/components/DropDown";
 import FormInputField from "@/common/components/FormInputField";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,19 +9,18 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { saveCustomer } from "@/service/Customer";
+import { getAllCustomer, saveCustomer, updateCustomer } from "@/service/Customer";
 
 import { Formik } from "formik";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-export function ModalCustomerAddUpdate({ visible, onClose }) {
+export function ModalCustomerAddUpdate({ visible, onClose, edit=false , customer }) {
 
   const dispatch = useDispatch();
   const [loader,setLoader] = useState(false)
   const saveCustomerData = useSelector((state)=>state.saveCustomerSlice.customer);
+  const updateCustomerData = useSelector((state)=>state.updateCustomerSlice.customer)
 
   const validateFields = (values)=>{
     const errors = {};
@@ -61,15 +59,23 @@ export function ModalCustomerAddUpdate({ visible, onClose }) {
   }
 
   const handleSubmit = (values, { setSubmitting })=>{
-    setLoader(true);
-    dispatch(saveCustomer(values))
-    setSubmitting(false);
+
+    if(edit){
+      setLoader(true)
+      dispatch(updateCustomer({id:customer._id,updateCustomer:values}))
+      setSubmitting(false);
+    }else{
+      setLoader(true);
+      dispatch(saveCustomer(values))
+      setSubmitting(false);
+    }
+   
   }
 
   useEffect(()=>{
     if(loader){
       if(saveCustomerData.isSuccess && !saveCustomerData.isLoading){
-          //dispatch(fetchProducts())
+          dispatch(getAllCustomer())
           setLoader(false);
           onClose();
       }else{
@@ -79,23 +85,35 @@ export function ModalCustomerAddUpdate({ visible, onClose }) {
     }
   },[saveCustomerData.data,saveCustomerData.errorMessage])
 
+  useEffect(()=>{
+    if(loader){
+        if(updateCustomerData.isSuccess && !updateCustomerData.isLoading){
+          dispatch(getAllCustomer())
+          setLoader(false);
+          onClose();
+        }else{
+          setLoader(false);
+        }
+    }
+},[updateCustomerData.data,updateCustomerData.errorMessage])
+
 
 
   return (
     <Dialog open={visible} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Add New Customer</DialogTitle>
+          <DialogTitle>{edit? "Edit Customer" : "Add New Customer"}</DialogTitle>
         </DialogHeader>
 
         <Formik
           initialValues={{
-            fullName: "",
-            contactNo: "",
-            email: "",
-            address: "",
-            username: "",
-            password: ""
+            fullName: edit? customer.fullName : "",
+            contactNo: edit? customer.contactNo : "",
+            email: edit? customer.email : "",
+            address: edit? customer.address : "",
+            username: edit? customer.username : "",
+            password: edit? customer.password : ""
           }}
 
           validate={validateFields}

@@ -1,26 +1,26 @@
 'use server'
 
 import connectToDB from "@/database";
-import Customer from "@/models/Customer";
+import Product from "@/models/Product";
 
-export async function savecustomerToDB(customer){
+export async function saveProductToDB(product){
 
-    const { fullName, contactNo , email , address , username , password } = customer
+    const { productName , description , unitPrice , cost , profit } = product
 
     try {
         await connectToDB();
 
-        const newCustomer = new Customer({ fullName, contactNo , email , address , username , password })
-        const saveCustomer = await newCustomer.save();
-        if(saveCustomer){
+        const newProduct = new Product({productName , description , unitPrice , cost , profit})
+        const saveProductr = await newProduct.save();
+        if(saveProductr){
             return {
                 success:true,
-                data:JSON.parse(JSON.stringify(saveCustomer))
+                data:JSON.parse(JSON.stringify(saveProductr))
             }
         }else {
             return {
                 success:false,
-                message:'Failed to save Customer. Please try again'
+                message:'Failed to save. Please try again'
             }
         }
 
@@ -33,14 +33,14 @@ export async function savecustomerToDB(customer){
     }
 }
 
-export async function getAllCustomersFromDB(){
+export async function getAllProductsFromDB(){
     try {
         await connectToDB();
-        const customers = await Customer.find();
-        if(customers){
+        const products = await Product.find();
+        if(products){
             return {
                 success:true,
-                data:JSON.parse(JSON.stringify(customers))
+                data:JSON.parse(JSON.stringify(products))
             }
         }else {
             return {
@@ -56,12 +56,12 @@ export async function getAllCustomersFromDB(){
     }
 }
 
-export async function updateCustomerFromDB(id,updateCustomer){
-    
+export async function updateProductFromDB(id,updateProduct){
+   
     try {
         await connectToDB();
         
-        const updateData = await Customer.findByIdAndUpdate(id, updateCustomer, { new: true });
+        const updateData = await Product.findByIdAndUpdate(id, updateProduct, { new: true });
 
         if(updateData){
             return {
@@ -82,15 +82,15 @@ export async function updateCustomerFromDB(id,updateCustomer){
     }
 }
 
-export async function deleteCustomerFromDB(id){
+export async function deleteProductFromDB(id){
     try {
         await connectToDB();
 
-        const deleteCustomer = await Customer.findByIdAndDelete(id);
-        if(deleteCustomer){
+        const deleteProduct = await Product.findByIdAndDelete(id);
+        if(deleteProduct){
             return {
                 success:true,
-                data: JSON.parse(JSON.stringify(deleteCustomer))
+                data: JSON.parse(JSON.stringify(deleteProduct))
             }
         }else{
             return {
@@ -106,6 +106,3 @@ export async function deleteCustomerFromDB(id){
         }
     }
 }
-
-
-
