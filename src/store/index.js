@@ -11,6 +11,7 @@ import saveProductSlice from "./slices/productSlice/saveProductSlice"
 import productSlice from "./slices/productSlice/productSlice"
 import deleteProductSlice from "./slices/productSlice/deleteProductSlice"
 import updateProductSlice from "./slices/productSlice/updateProductSlice"
+import saveOrderSlice from "./slices/orderSlice/saveOrderSlice"
 
 export const store = configureStore({
     reducer: {
@@ -24,6 +25,8 @@ export const store = configureStore({
         saveProductSlice,
         productSlice,
         deleteProductSlice,
-        updateProductSlice
+        updateProductSlice,
+
+        saveOrderSlice
     },
 })

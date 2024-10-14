@@ -1,11 +1,19 @@
-// import mongoose from "mongoose";
+import mongoose from "mongoose";
 
-// const orderSchema = new mongoose.Schema({
-//     refNo:String,
-//     date:String,
-//     total:String,
+const orderSchema = new mongoose.Schema({
 
-// })
+    customer:{type:mongoose.Schema.Types.ObjectId,ref:'Customer'},
 
-// const Order = mongoose.models?.Order || mongoose.model('Order',orderSchema)
-// export default Order;
+    description:String,
+    status:String,
+    totolAmount:String,
+    paidAmount:String,
+    orderDate:String,
+    completeDate:String,
+
+    orderDetails:[{type:mongoose.Schema.Types.ObjectId, ref:'OrderDetails'}]
+
+})
+
+const Order = mongoose.models?.Order || mongoose.model('Order',orderSchema)
+export default Order;

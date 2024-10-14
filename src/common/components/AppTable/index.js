@@ -48,7 +48,7 @@ export default function AppTable({columns,data}) {
         <>
             <Input placeholder="Search" onChange={handleSearch} />
             <Table>
-                <TableCaption>A list of Customers.</TableCaption>
+                {/* <TableCaption>A list of Customers.</TableCaption> */}
                 <TableHeader>
                     <TableRow>
                         {columns.map((col) => (<TableHead key={col}>{col.label}</TableHead>))}

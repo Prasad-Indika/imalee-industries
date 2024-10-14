@@ -1,7 +1,8 @@
 'use server'
 
 import connectToDB from "@/database";
-import Customer from "@/models/Customer";
+import Custmer from "@/models/Custmer";
+// import Customer from "@/models/Customer";
 
 export async function savecustomerToDB(customer){
 
@@ -10,7 +11,7 @@ export async function savecustomerToDB(customer){
     try {
         await connectToDB();
 
-        const newCustomer = new Customer({ fullName, contactNo , email , address , username , password })
+        const newCustomer = new Custmer({ fullName, contactNo , email , address , username , password })
         const saveCustomer = await newCustomer.save();
         if(saveCustomer){
             return {
@@ -24,7 +25,6 @@ export async function savecustomerToDB(customer){
             }
         }
 
-
     } catch (error) {
         return {
             success:false,
@@ -36,7 +36,7 @@ export async function savecustomerToDB(customer){
 export async function getAllCustomersFromDB(){
     try {
         await connectToDB();
-        const customers = await Customer.find();
+        const customers = await Custmer.find();
         if(customers){
             return {
                 success:true,
@@ -61,7 +61,7 @@ export async function updateCustomerFromDB(id,updateCustomer){
     try {
         await connectToDB();
         
-        const updateData = await Customer.findByIdAndUpdate(id, updateCustomer, { new: true });
+        const updateData = await Custmer.findByIdAndUpdate(id, updateCustomer, { new: true });
 
         if(updateData){
             return {
@@ -86,7 +86,7 @@ export async function deleteCustomerFromDB(id){
     try {
         await connectToDB();
 
-        const deleteCustomer = await Customer.findByIdAndDelete(id);
+        const deleteCustomer = await Custmer.findByIdAndDelete(id);
         if(deleteCustomer){
             return {
                 success:true,

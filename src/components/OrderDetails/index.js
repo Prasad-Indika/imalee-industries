@@ -1,12 +1,10 @@
 'use client'
 import React, { useState } from 'react'
 import AppButton from '@/common/components/AppButton'
-import Link from 'next/link'
-import { ModalOrderAdd } from '../ModalOrderAdd'
-import { Toggle } from "@/components/ui/toggle"
+import { ModalOrderItemAddUpdate } from '../ModalOrderItemAddUpdate';
 
 
-export default function OrderHome() {
+export default function OrderDetails({orderId}) {
 
   const [visible,setVisible] = useState();
 
@@ -15,14 +13,13 @@ export default function OrderHome() {
     <div className="flex flex-col gap-4">
       <div>
         <div className="flex justify-between">
-          <h1 className="text-3xl mb-3">Products</h1>
+          <h1 className="text-3xl mb-3">{orderId}</h1>
           <AppButton
-            name={"Add New Order"}
+            name={"Add New Item"}
             onClick={() => {
               setVisible(true);
             }}
           />
-          {/* <Link href={'/Orders/10'}>new</Link> */}
         </div>
 
         <hr className="border-t border-gray-300" />
@@ -32,15 +29,13 @@ export default function OrderHome() {
         {/* <AppTable columns={columns} data={productTableData} /> */}
       </div>
 
-      {visible && (
-        <ModalOrderAdd
-          visible={visible}
-          onClose={() => {
-            setVisible(false);
-          }}
+      {visible && 
+        <ModalOrderItemAddUpdate
+            visible={visible}
+            onClose={()=>{setVisible(false)}}
+            orderId={orderId}
         />
-      )}
-
+      }
     </div>
   )
 }
