@@ -12,6 +12,7 @@ export async function saveProductToDB(product){
 
         const newProduct = new Product({productName , description , unitPrice , cost , profit})
         const saveProductr = await newProduct.save();
+        
         if(saveProductr){
             return {
                 success:true,

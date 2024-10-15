@@ -54,6 +54,8 @@ export default function CustomerHome() {
   useEffect(()=>{
     if(customerData.isSuccess){
         const data = customerData?.data;
+        console.log(data);
+        
         if(Array.isArray(data)){
             const array = data.map((val,index)=>({
               id:index,

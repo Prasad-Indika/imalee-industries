@@ -11,12 +11,13 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { saveOrder } from "@/service/Order"
+import { getPendingOrders, saveOrder } from "@/service/Order"
 import { useDispatch, useSelector } from "react-redux"
 import { Formik } from "formik";
 import FormInputField from "@/common/components/FormInputField"
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
+import { saveOrderItemToDB } from "@/actions/orderDetailsActions"
 
 export function ModalOrderAdd({visible,onClose}) {
 
@@ -43,11 +44,8 @@ export function ModalOrderAdd({visible,onClose}) {
     const handleSubmit = (values, { setSubmitting })=>{
      
         setLoader(true);
-        dispatch(saveOrder({customer:'6707aa0aa2405bfacfdb538a',order:values}));  
-        setSubmitting(true);
-        
-        //console.log("Working",values);
-        
+        dispatch(saveOrder({customer:'670d222a5a6f4ffaf9c30ea2',order:values}));  
+        setSubmitting(true); 
     }
 
     const validateFields = (values)=>{
@@ -63,9 +61,7 @@ export function ModalOrderAdd({visible,onClose}) {
   useEffect(()=>{
     if(loader){
       if(saveOrderData.isSuccess && !saveOrderData.isLoading){
-         // dispatch(getAllCustomer())
-         console.log(saveOrderData.data);
-
+          dispatch(getPendingOrders())
           setLoader(false);
           onClose();
           router.push(`Orders/${saveOrderData?.data._id}`)

@@ -1,7 +1,8 @@
 'use server'
 
 import connectToDB from "@/database";
-import Custmer from "@/models/Custmer";
+import Customr from "@/models/Customr";
+// import Custmer from "@/models/Custmer";
 // import Customer from "@/models/Customer";
 
 export async function savecustomerToDB(customer){
@@ -11,7 +12,7 @@ export async function savecustomerToDB(customer){
     try {
         await connectToDB();
 
-        const newCustomer = new Custmer({ fullName, contactNo , email , address , username , password })
+        const newCustomer = new Customr({ fullName, contactNo , email , address , username , password })
         const saveCustomer = await newCustomer.save();
         if(saveCustomer){
             return {
@@ -36,7 +37,7 @@ export async function savecustomerToDB(customer){
 export async function getAllCustomersFromDB(){
     try {
         await connectToDB();
-        const customers = await Custmer.find();
+        const customers = await Customr.find();
         if(customers){
             return {
                 success:true,
@@ -61,7 +62,7 @@ export async function updateCustomerFromDB(id,updateCustomer){
     try {
         await connectToDB();
         
-        const updateData = await Custmer.findByIdAndUpdate(id, updateCustomer, { new: true });
+        const updateData = await Customr.findByIdAndUpdate(id, updateCustomer, { new: true });
 
         if(updateData){
             return {
@@ -86,7 +87,7 @@ export async function deleteCustomerFromDB(id){
     try {
         await connectToDB();
 
-        const deleteCustomer = await Custmer.findByIdAndDelete(id);
+        const deleteCustomer = await Customr.findByIdAndDelete(id);
         if(deleteCustomer){
             return {
                 success:true,

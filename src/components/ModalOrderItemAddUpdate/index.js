@@ -17,27 +17,32 @@ import { Formik } from "formik";
 import FormInputField from "@/common/components/FormInputField"
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
+import { saveOrderItemToDB } from "@/actions/orderDetailsActions"
+import { saveOrderItem } from "@/service/OrderDetails"
 
 export function ModalOrderItemAddUpdate({visible,onClose,orderId}) {
 
     const router = useRouter()
     const dispatch = useDispatch();
     const [loader,setLoader] = useState(false)
-    // const saveOrderData = useSelector((state)=>state.saveOrderSlice.order);
-
-    const today = new Date();
-    const formattedDate = today.toISOString().split('T')[0];
+    const saveOrderItemData = useSelector((state)=>state.saveOrderDetailSlice.orderDetail);
 
   
-
     const handleSubmit = (values, { setSubmitting })=>{
      
-        // setLoader(true);
-        // dispatch(saveOrder({customer:'6707aa0aa2405bfacfdb538a',order:values}));  
-        // setSubmitting(true);
-        
-        console.log(values);
-        
+        const tot = Number(values.qty) * Number(values.unitPrice)
+        const newData = {
+      
+          description:values.description,
+          qty:values.qty ,
+          unitPrice:values.unitPrice,
+          total:tot.toString(),
+          status:"pending"
+        }
+  
+        setLoader(true);
+        dispatch(saveOrderItem({order:orderId,orderitem:newData}))
+        setSubmitting(true);
     }
 
     const validateFields = (values)=>{
@@ -50,21 +55,18 @@ export function ModalOrderItemAddUpdate({visible,onClose,orderId}) {
       return errors;
   }
 
-//   useEffect(()=>{
-//     if(loader){
-//       if(saveOrderData.isSuccess && !saveOrderData.isLoading){
-//          // dispatch(getAllCustomer())
-//          console.log(saveOrderData.data);
-
-//           setLoader(false);
-//           onClose();
-//           router.push(`Orders/${saveOrderData?.data._id}`)
-//       }else{
-//           console.log("data Not saved..");
-//           setLoader(false);
-//       }
-//     }
-//   },[saveOrderData.data,saveOrderData.errorMessage])
+  useEffect(()=>{
+    if(loader){
+      if(saveOrderItemData.isSuccess && !saveOrderItemData.isLoading){
+         // dispatch(getAllCustomer())
+          setLoader(false);
+          onClose();
+      }else{
+          console.log("data Not saved..");
+          setLoader(false);
+      }
+    }
+  },[saveOrderItemData.data,saveOrderItemData.errorMessage])
 
 
   return (
@@ -80,8 +82,8 @@ export function ModalOrderItemAddUpdate({visible,onClose,orderId}) {
         <Formik
           initialValues={{
             description:  "",
-            qty: "10",
-            unitPrice:  "0",
+            qty: "",
+            unitPrice: "",
             status: "pending",
           }}
 

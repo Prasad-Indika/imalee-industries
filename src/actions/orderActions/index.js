@@ -1,8 +1,10 @@
 'use server'
 
 import connectToDB from "@/database";
-import Custmer from "@/models/Custmer";
-import Order from "@/models/Order";
+import Customr from "@/models/Customr";
+// import Custmer from "@/models/Custmer";
+// import Order from "@/models/Order";
+import Ordr from "@/models/Ordr";
 
 export async function saveOrderToDB(customer,order){
 
@@ -11,8 +13,8 @@ export async function saveOrderToDB(customer,order){
     try {
         await connectToDB();
 
-        const custmer = await Custmer.findById(customer)
-        const newOrder = new Order({customer,  description , status , totolAmount , paidAmount, orderDate , completeDate });
+        const custmer = await Customr.findById(customer)
+        const newOrder = new Ordr({customer,  description , status , totolAmount , paidAmount, orderDate , completeDate });
         const saveOrder = await newOrder.save();
 
         custmer.orders.push(saveOrder._id);
@@ -41,14 +43,17 @@ export async function saveOrderToDB(customer,order){
 export async function getAllOrdersFromDB() {
     try {
         await connectToDB();
-        const res = await Client.find().populate('orders').lean();
+        const res = await Ordr.find().populate('customer').populate('orderItems').lean();
 
-        if(res.length > 0){
+        if(res){
+            console.log("ok");
+            
             return {
                 success:true,
                 data:JSON.parse(JSON.stringify(res))
             }
         }else {
+            console.log("error");
             return {
                 success:false,
                 message:'Some Error occur'
@@ -56,6 +61,65 @@ export async function getAllOrdersFromDB() {
         }
 
     } catch (error) {
+        console.log("errorrss",error.message);
+        return {
+            success:false,
+            message:error.message
+        }
+    }
+}
+
+export async function getPendingOrdersFromDB() {
+    try {
+        await connectToDB();
+        const res = await Ordr.find({ status: 'pending' }).populate('customer').populate('orderItems').lean();
+
+        if(res){
+            console.log("ok");
+            
+            return {
+                success:true,
+                data:JSON.parse(JSON.stringify(res))
+            }
+        }else {
+            console.log("error");
+            return {
+                success:false,
+                message:'Some Error occur'
+            }
+        }
+
+    } catch (error) {
+        console.log("errorrss",error.message);
+        return {
+            success:false,
+            message:error.message
+        }
+    }
+}
+
+export async function getCompleteOrdersFromDB() {
+    try {
+        await connectToDB();
+        const res = await Ordr.find({ status: 'complete' }).populate('customer').populate('orderItems').lean();
+
+        if(res){
+            console.log("ok");
+            
+            return {
+                success:true,
+                data:JSON.parse(JSON.stringify(res))
+            }
+        }else {
+            console.log("error");
+            return {
+                success:false,
+                message:'Some Error occur'
+            }
+        }
+
+    } catch (error) {
+        console.log("errorrss",error.message);
         return {
             success:false,
             message:error.message

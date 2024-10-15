@@ -1,12 +1,48 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import AppButton from '@/common/components/AppButton'
 import { ModalOrderItemAddUpdate } from '../ModalOrderItemAddUpdate';
+import { useDispatch, useSelector } from 'react-redux';
+import { getOrderItemByOrder } from '@/service/OrderDetails';
 
 
 export default function OrderDetails({orderId}) {
 
+  const dispatch = useDispatch();
   const [visible,setVisible] = useState();
+  const orderItemsData = useSelector((state)=>state.orderItemsByOrderSlice.orderDetail); 
+
+  useEffect(()=>{
+    console.log("working..");
+    
+    dispatch(getOrderItemByOrder(orderId))
+  },[])
+
+  useEffect(()=>{
+    if(orderItemsData.isSuccess){
+        const data = orderItemsData?.data;
+        console.log(data);
+        
+        if(Array.isArray(data)){
+          //   const array = data.map((val,index)=>({
+          //     id:index,
+          //     fullName:val.fullName,
+          //     contactNo:val.contactNo,
+          //     email:val.email,
+          //     address:val.address,
+          //     action:(<>
+          //       <div className='flex gap-3'>
+          //         <AiOutlineEdit size={"20px"} onClick={()=>{handleEdit(val)}} />
+          //         <AiOutlineDelete size={"20px"} onClick={()=>{handleDelete(val._id)}}/>
+          //       </div>
+          //     </>)
+          //   }))
+          // setCustomerTableData(array);     
+        }
+    }
+    
+},[orderItemsData.data,orderItemsData.isSuccess])
+  
 
 
   return (
