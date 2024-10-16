@@ -19,33 +19,53 @@ import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { saveOrderItemToDB } from "@/actions/orderDetailsActions"
 import AutocompleteDropdown from "@/common/components/AutocompleteDropdown"
+import { getAllCustomer } from "@/service/Customer"
+import { PopoverDemo } from "@/common/components/PopoverDemo"
+import { CommandCom } from "@/common/components/CommandCom"
+
+const frameworks = [
+  {
+    value: "next.js",
+    label: "Next.js",
+  },
+  {
+    value: "sveltekit",
+    label: "SvelteKit",
+  },
+  {
+    value: "nuxt.js",
+    label: "Nuxt.js",
+  },
+  {
+    value: "remix",
+    label: "Remix",
+  },
+  {
+    value: "astro",
+    label: "Astro",
+  },
+];
 
 export function ModalOrderAdd({visible,onClose}) {
 
     const router = useRouter()
     const dispatch = useDispatch();
-    const [customer, setCustomer] = useState('');
+    const [customer, setCustomer] = useState("");
     const [customerError,setCustomerError] = useState('')
     const [loader,setLoader] = useState(false)
+    const [customerList,setCustomerList] = useState([])
     const saveOrderData = useSelector((state)=>state.saveOrderSlice.order);
+    const customerData = useSelector((state)=>state.customersSlice.customer)
+    const isValid = !!customer
 
     const today = new Date();
     const formattedDate = today.toISOString().split('T')[0];
 
-    const handleCustomerNameChange = (e)=>{
-      setCustomer(e.target.value);
-      console.log(e.target.value); 
-      if(e.target.value === ''){
-        setCustomerError("Requed")
-      }else{
-        setCustomerError("")
-      }
-    }
 
     const handleSubmit = (values, { setSubmitting })=>{
      
         setLoader(true);
-        dispatch(saveOrder({customer:'670f41a2cc0f5ce41ae3f56d',order:values}));  
+        dispatch(saveOrder({customer:customer?.value,order:values}));  
         setSubmitting(true); 
     }
 
@@ -58,6 +78,27 @@ export function ModalOrderAdd({visible,onClose}) {
      
       return errors;
   }
+
+  useEffect(()=>{
+    dispatch(getAllCustomer());
+  },[])
+
+  useEffect(()=>{
+    if(customerData.isSuccess){
+        const data = customerData?.data;
+        console.log(data);
+        
+        if(Array.isArray(data)){
+            const array = data.map((val,index)=>({
+              value:val._id,
+              label:val.fullName,
+            }))
+          setCustomerList(array);     
+        }
+    }
+    
+},[customerData.data,customerData.isSuccess])
+
 
   useEffect(()=>{
     if(loader){
@@ -83,7 +124,8 @@ export function ModalOrderAdd({visible,onClose}) {
         </DialogHeader>
         <div className="grid gap-4 py-4">
 
-        <AutocompleteDropdown/>
+        <CommandCom data={customerList} onSelect={(val)=>{setCustomer(val);
+        }}/>
 
 
         <Formik
@@ -111,15 +153,13 @@ export function ModalOrderAdd({visible,onClose}) {
             <form onSubmit={handleSubmit}>
               <div className="grid gap-4 py-4">
 
-                {/* <FormInputField
+                <FormInputField
                   label={"Customer Name"}
                   name={"customerName"}
-                  value={customer}
-                  onChange={handleCustomerNameChange}
-                  error={customerError}
+                  value={customer?.label}
                   touched={true}
                   onBlur={handleBlur}
-                /> */}
+                />
 
                 
 
@@ -139,7 +179,7 @@ export function ModalOrderAdd({visible,onClose}) {
               </div>
 
               <DialogFooter>
-                <Button type="submit" disabled={isSubmitting}>
+                <Button type="submit" disabled={!isValid}>
                   Create Order
                 </Button>
               </DialogFooter>

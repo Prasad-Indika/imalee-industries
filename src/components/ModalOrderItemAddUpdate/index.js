@@ -94,7 +94,7 @@ export function ModalOrderItemAddUpdate({visible,onClose,orderId,edit=false,orde
       
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>{edit? "Update Item" : "New Order Item"} {orderId}</DialogTitle>
+          <DialogTitle>{edit? "Update Item" : "New Order Item"}</DialogTitle>
         </DialogHeader>
         <div className="grid gap-4 py-4">
 

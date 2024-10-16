@@ -6,6 +6,8 @@ import AppTable from "@/common/components/AppTable";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteProduct, getAllProducts } from "@/service/Product";
 import { AiOutlineDelete ,AiOutlineEdit } from "react-icons/ai";
+import { Flip, ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function ProductHome() {
 
@@ -82,6 +84,7 @@ if(loader){
           <AppButton
             name={"Add New Product"}
             onClick={() => {
+              // toast("Wow so easy !")
               setVisible(true);
             }}
           />
@@ -113,6 +116,9 @@ if(loader){
           product={selectedProduct}
         />
       )}
+       <ToastContainer
+           transition={Flip}
+        />
     </div>
   );
 }
