@@ -6,10 +6,12 @@ import { ModalOrderAdd } from '../ModalOrderAdd'
 import { Toggle } from "@/components/ui/toggle"
 import { useDispatch, useSelector } from 'react-redux'
 import { getAllOrders, getCompleteOrders, getPendingOrders } from '@/service/Order'
-import { AiOutlineDelete, AiOutlineEdit,AiOutlineArrowRight } from 'react-icons/ai'
+import { AiOutlineDelete, AiOutlineEdit,AiOutlineArrowRight ,AiOutlineSwap} from 'react-icons/ai'
+
 
 import AppTable from '@/common/components/AppTable'
 import { useRouter } from 'next/navigation'
+import { Button } from '../ui/button'
 
 
 export default function OrderHome() {
@@ -31,12 +33,10 @@ export default function OrderHome() {
     {label:"Action",field:"action"}
   ]
 
-
   useEffect(()=>{
     dispatch(getPendingOrders());
     dispatch(getCompleteOrders());
   },[])
-
 
   useEffect(()=>{
     if(pendingOrderData.isSuccess){
@@ -94,17 +94,19 @@ export default function OrderHome() {
     <div className="flex flex-col gap-4">
       <div>
         <div className="flex justify-between">
+          <h1 className="text-3xl mb-3">{isPending? "Ongoing Orders" : "Complete Orders"}</h1>
           <div className='flex gap-2'>
-              <h1 className="text-3xl mb-3">{isPending? "Ongoing Orders" : "Complete Orders"}</h1>
-              <AppButton name={'Change'} onClick={()=>{setIsPending(!isPending)}}/>
+              {/* <AppButton name={'Change'} onClick={()=>{setIsPending(!isPending)}}/> */}
+              <Button variant="outline" size="icon">
+                  <AiOutlineSwap size={"20px"} onClick={()=>{setIsPending(!isPending)}} />
+              </Button>
+              <AppButton
+                name={"New Order"}
+                onClick={() => {
+                  setVisible(true);
+                }}
+              />
           </div>
-         
-          <AppButton
-            name={"Add New Order"}
-            onClick={() => {
-              setVisible(true);
-            }}
-          />
           {/* <Link href={'/Orders/10'}>new</Link> */}
         </div>
 

@@ -92,7 +92,7 @@ useEffect(()=>{
             <div className='flex justify-between'>
                 <h1 className='text-3xl mb-3'>Customers</h1>
                 <AppButton 
-                    name={'Add New Customer'}
+                    name={'New Customer'}
                     onClick={()=>{setVisible(true)}}/>
             </div>
            

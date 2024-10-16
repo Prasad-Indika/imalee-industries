@@ -12,6 +12,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { getCompleteOrders, getOrderById, getPendingOrders, updateOrderComplete } from "@/service/Order"
+import { getOrderItemByOrder } from "@/service/OrderDetails"
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 
@@ -43,7 +44,8 @@ export function ModalOrderComplete({visible,onClose,total,orderId}) {
           if(updateData.isSuccess && !updateData.isLoading){
             dispatch(getPendingOrders());
             dispatch(getCompleteOrders());
-            dispatch(getOrderById(orderId))
+            dispatch(getOrderById(orderId));
+            dispatch(getOrderItemByOrder(orderId));
             setLoader(false);
             onClose();
           }else{

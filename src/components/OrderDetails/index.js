@@ -122,9 +122,25 @@ useEffect(()=>{
     <div className="flex flex-col gap-4">
       <div>
         <div className="flex justify-between">
-          <h1 className="text-2xl mb-3">{orderData?.data?.customer?.fullName}</h1>
+          <div>
+              <h1 className="text-[14px] mb-1">Customer : {orderData?.data?.customer?.fullName}</h1>
+              <h1 className="text-[14px] mb-1">Order on : {orderData?.data?.orderDate}</h1>
+              {orderData?.data?.status === 'complete' ? <h1 className="text-[14px] mb-1">Complete on : {orderData?.data?.completeDate}</h1> :""}
+          </div>
+          
           <div className='flex gap-3'>
-              <h1 className="text-2xl mb-3">Total : {totalAmount} </h1>
+              <div>
+                  
+                  {orderData?.data?.status === 'complete' ? 
+                      <>
+                          <h1 className="text-[14px] mb-1">Total : {totalAmount} </h1>
+                          <h1 className="text-[14px] mb-1">Paid : {orderData?.data?.paidAmount} </h1>
+                          <h1 className="text-[14px] mb-1">Bal : {Number(totalAmount)-Number(orderData?.data?.paidAmount)} </h1>
+                      </>
+                       :<h1 className="text-2xl mb-3">Total : {totalAmount} </h1> }
+                  
+              </div>
+              
               <AppButton
                   name={"Complete"}
                   onClick={() => {

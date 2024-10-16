@@ -2,6 +2,7 @@
 
 import connectToDB from "@/database"
 import User from "@/models/User";
+import jwt from 'jsonwebtoken'; 
 
 export async function saveUserToDB(user){
 
@@ -33,22 +34,38 @@ export async function saveUserToDB(user){
     }
 }
 
-export async function userLoin(loginDetails){
-    const {userName , password} = loginDetails
+export async function userLogin(loginDetails){
+    const {userName,password} = loginDetails;
+
     try {
         await connectToDB();
         const checkUser = await User.findOne({userName});
-        if(checkUser){
-            return {
-                success:true,
-                data:JSON.parse(JSON.stringify(checkUser))
-            }
-        }else {
+        if(!checkUser){
             return {
                 success:false,
-                message:'No user Found'
+                message:'Invalid User'
             }
         }
+
+        if(password !== checkUser.password){
+            return {
+                success:false,
+                message:'Invalid Password'
+            }
+        }
+
+        const tokenData = {
+            id:checkUser._id,
+            userName:checkUser.userName
+        }
+
+        const token = jwt.sign(tokenData,"DEAFULT_KEY",{expiresIn:"1d"})
+        
+        return {
+            success:true,
+            token:token
+        }
+
 
     } catch (error) {
         return {
@@ -56,8 +73,8 @@ export async function userLoin(loginDetails){
             message:error.message
         }
     }
-}
 
+}
 
 export async function getAllUsersFromDB(){
     try {

@@ -18,6 +18,7 @@ import FormInputField from "@/common/components/FormInputField"
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { saveOrderItemToDB } from "@/actions/orderDetailsActions"
+import AutocompleteDropdown from "@/common/components/AutocompleteDropdown"
 
 export function ModalOrderAdd({visible,onClose}) {
 
@@ -44,7 +45,7 @@ export function ModalOrderAdd({visible,onClose}) {
     const handleSubmit = (values, { setSubmitting })=>{
      
         setLoader(true);
-        dispatch(saveOrder({customer:'670de5ca5a6f4ffaf9c311e8',order:values}));  
+        dispatch(saveOrder({customer:'670f41a2cc0f5ce41ae3f56d',order:values}));  
         setSubmitting(true); 
     }
 
@@ -82,6 +83,8 @@ export function ModalOrderAdd({visible,onClose}) {
         </DialogHeader>
         <div className="grid gap-4 py-4">
 
+        <AutocompleteDropdown/>
+
 
         <Formik
           initialValues={{
@@ -108,7 +111,7 @@ export function ModalOrderAdd({visible,onClose}) {
             <form onSubmit={handleSubmit}>
               <div className="grid gap-4 py-4">
 
-                <FormInputField
+                {/* <FormInputField
                   label={"Customer Name"}
                   name={"customerName"}
                   value={customer}
@@ -116,7 +119,9 @@ export function ModalOrderAdd({visible,onClose}) {
                   error={customerError}
                   touched={true}
                   onBlur={handleBlur}
-                />
+                /> */}
+
+                
 
                 {/* <Input/> */}
 

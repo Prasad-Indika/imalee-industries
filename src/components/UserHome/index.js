@@ -59,7 +59,7 @@ export default function UserHome() {
             <div className='flex justify-between'>
                 <h1 className='text-3xl mb-3'>Users</h1>
                 <AppButton 
-                    name={'Add New User'}
+                    name={'New User'}
                     onClick={()=>{setVisible(true)}}/>
             </div>
            

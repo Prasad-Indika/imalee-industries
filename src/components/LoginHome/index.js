@@ -1,19 +1,33 @@
 'use client'
 import { useRouter } from 'next/navigation';
-import React from 'react'
+import React, { useState } from 'react'
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllUsers } from '@/service/User';
+import { userLogin } from '@/actions/userActions';
 
 export default function LoginHome() {
     const dispatch = useDispatch()
     const router = useRouter();
-    const allUsersData = useSelector((state=>state.usersSlice.user))
+    const [userName,setUserName] = useState("");
+    const [password,setPassword] = useState("");
 
-    const handleLogin = ()=>{
-        localStorage.setItem('token','100')
-        router.push('/')
+    const handleLogin = async ()=>{
+
+        const loginDetails = {
+            userName:userName,
+            password:password
+        }
+
+        const loginResult = await userLogin(loginDetails)
+        if(loginResult.success){
+            const token = loginResult?.token
+            localStorage.setItem('token',token)
+            router.push("/")
+        }
+        
+        // router.push('/')
     }
   return (
     <div className='flex flex-col gap-7 font-sans'>
@@ -25,12 +39,16 @@ export default function LoginHome() {
         <div>
             <Input
                 placeholder={'Username'}
+                value={userName}
+                onChange={(e)=>{setUserName(e.target.value)}}
 
             />
         </div>
         <div>
             <Input
                 placeholder={'Password'}
+                value={password}
+                onChange={(e)=>{setPassword(e.target.value)}}
 
             />
         </div>
@@ -44,15 +62,6 @@ export default function LoginHome() {
 
                 >Sign in</Button>
         </div>
-        {/* <div>
-            <Button 
-                className='w-full'
-                onClick={()=>{
-                    dispatch(getAllUsers());
-                }}
-
-                >Get</Button>
-        </div> */}
     </div>
   )
 }
