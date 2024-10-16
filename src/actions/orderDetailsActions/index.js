@@ -2,8 +2,6 @@
 
 import connectToDB from "@/database";
 import Odritm from "@/models/Odritm";
-// import Order from "@/models/Order";
-// import Orderitem from "@/models/Orderitem";
 import Ordr from "@/models/Ordr";
 
 export async function saveOrderItemToDB(order,orderitem){
@@ -31,7 +29,6 @@ export async function saveOrderItemToDB(order,orderitem){
                 message:'Failed to save. Please try again'
             }
         }
-
 
     } catch (error) {
         return {
@@ -90,7 +87,6 @@ export async function updateOrderItemToDB(orderItemId,updateditem){
                 message:'Failed to save. Please try again'
             }
         }
-
 
     } catch (error) {
         return {

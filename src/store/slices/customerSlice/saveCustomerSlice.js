@@ -17,15 +17,12 @@ const saveCustomerSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(saveCustomer.pending, (state) => {
-                state.customer.isLoading = true;
-                console.log("Loading..");
+                state.customer.isLoading = true;   
             })
             .addCase(saveCustomer.fulfilled, (state, action) => {
                 state.customer.isLoading = false;
                 state.customer.isSuccess = true;
-                state.customer.data = action.payload;
-                console.log("Fullfill",action.payload);
-                
+                state.customer.data = action.payload;         
             })
             .addCase(saveCustomer.rejected, (state, action) => {
                 state.customer.isLoading = false;

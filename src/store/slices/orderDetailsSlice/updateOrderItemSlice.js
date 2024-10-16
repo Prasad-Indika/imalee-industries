@@ -18,20 +18,16 @@ const updateOrderItemSlice = createSlice({
         builder
             .addCase(updateOrderItem.pending, (state) => {
                 state.orderDetail.isLoading = true;
-                console.log("Loading..");
             })
             .addCase(updateOrderItem.fulfilled, (state, action) => {
                 state.orderDetail.isLoading = false;
                 state.orderDetail.isSuccess = true;
                 state.orderDetail.data = action.payload;
-                console.log("Fullfill",action.payload);
-                
             })
             .addCase(updateOrderItem.rejected, (state, action) => {
                 state.orderDetail.isLoading = false;
                 state.orderDetail.isSuccess = false;
                 state.orderDetail.errorMessage = action.error.message;
-                console.log("Reject",action.error.message);
             });
     }
 

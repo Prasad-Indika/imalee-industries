@@ -18,14 +18,11 @@ const addUserSlice = createSlice({
         builder
             .addCase(saveUser.pending, (state) => {
                 state.user.isLoading = true;
-                console.log("Loading..");
             })
             .addCase(saveUser.fulfilled, (state, action) => {
                 state.user.isLoading = false;
                 state.user.isSuccess = true;
                 state.user.data = action.payload;
-                console.log("Fullfill",action.payload);
-                
             })
             .addCase(saveUser.rejected, (state, action) => {
                 state.user.isLoading = false;

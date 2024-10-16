@@ -1,4 +1,3 @@
-import { DropDown } from "@/common/components/DropDown";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -18,7 +17,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Formik } from "formik";
 import FormInputField from "@/common/components/FormInputField";
@@ -60,9 +58,6 @@ export function ModalUserAddUpdate({ visible, onClose }) {
 
   return (
     <Dialog open={visible} onOpenChange={onClose}>
-      {/* <DialogTrigger asChild>
-        <Button variant="outline">Edit Profile</Button>
-      </DialogTrigger> */}
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Add New User</DialogTitle>

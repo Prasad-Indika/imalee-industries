@@ -9,20 +9,31 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { getAllCustomer, saveCustomer, updateCustomer } from "@/service/Customer";
-
+import {
+  getAllCustomer,
+  saveCustomer,
+  updateCustomer,
+} from "@/service/Customer";
 import { Formik } from "formik";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-export function ModalCustomerAddUpdate({ visible, onClose, edit=false , customer }) {
-
+export function ModalCustomerAddUpdate({
+  visible,
+  onClose,
+  edit = false,
+  customer,
+}) {
   const dispatch = useDispatch();
-  const [loader,setLoader] = useState(false)
-  const saveCustomerData = useSelector((state)=>state.saveCustomerSlice.customer);
-  const updateCustomerData = useSelector((state)=>state.updateCustomerSlice.customer)
+  const [loader, setLoader] = useState(false);
+  const saveCustomerData = useSelector(
+    (state) => state.saveCustomerSlice.customer
+  );
+  const updateCustomerData = useSelector(
+    (state) => state.updateCustomerSlice.customer
+  );
 
-  const validateFields = (values)=>{
+  const validateFields = (values) => {
     const errors = {};
 
     if (!values.fullName) {
@@ -31,15 +42,13 @@ export function ModalCustomerAddUpdate({ visible, onClose, edit=false , customer
 
     if (!values.contactNo) {
       errors.contactNo = "Required";
-    }else if( !/^\d+$/.test(values.contactNo)){
-      errors.contactNo = "Incorrect Format"
+    } else if (!/^\d+$/.test(values.contactNo)) {
+      errors.contactNo = "Incorrect Format";
     }
 
     if (!values.email) {
       errors.email = "Email Required";
-    } else if (
-      !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
-    ) {
+    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)) {
       errors.email = "Invalid email address";
     }
 
@@ -56,66 +65,62 @@ export function ModalCustomerAddUpdate({ visible, onClose, edit=false , customer
     }
 
     return errors;
-  }
+  };
 
-  const handleSubmit = (values, { setSubmitting })=>{
-
-    if(edit){
-      setLoader(true)
-      dispatch(updateCustomer({id:customer._id,updateCustomer:values}))
-      setSubmitting(false);
-    }else{
+  const handleSubmit = (values, { setSubmitting }) => {
+    if (edit) {
       setLoader(true);
-      dispatch(saveCustomer(values))
+      dispatch(updateCustomer({ id: customer._id, updateCustomer: values }));
+      setSubmitting(false);
+    } else {
+      setLoader(true);
+      dispatch(saveCustomer(values));
       setSubmitting(false);
     }
-   
-  }
+  };
 
-  useEffect(()=>{
-    if(loader){
-      if(saveCustomerData.isSuccess && !saveCustomerData.isLoading){
-          dispatch(getAllCustomer())
-          setLoader(false);
-          onClose();
-      }else{
-          console.log("data Not saved..");
-          setLoader(false);
+  useEffect(() => {
+    if (loader) {
+      if (saveCustomerData.isSuccess && !saveCustomerData.isLoading) {
+        dispatch(getAllCustomer());
+        setLoader(false);
+        onClose();
+      } else {
+        setLoader(false);
       }
     }
-  },[saveCustomerData.data,saveCustomerData.errorMessage])
+  }, [saveCustomerData.data, saveCustomerData.errorMessage]);
 
-  useEffect(()=>{
-    if(loader){
-        if(updateCustomerData.isSuccess && !updateCustomerData.isLoading){
-          dispatch(getAllCustomer())
-          setLoader(false);
-          onClose();
-        }else{
-          setLoader(false);
-        }
+  useEffect(() => {
+    if (loader) {
+      if (updateCustomerData.isSuccess && !updateCustomerData.isLoading) {
+        dispatch(getAllCustomer());
+        setLoader(false);
+        onClose();
+      } else {
+        setLoader(false);
+      }
     }
-},[updateCustomerData.data,updateCustomerData.errorMessage])
-
-
+  }, [updateCustomerData.data, updateCustomerData.errorMessage]);
 
   return (
     <Dialog open={visible} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>{edit? "Edit Customer" : "Add New Customer"}</DialogTitle>
+          <DialogTitle>
+            {edit ? "Edit Customer" : "Add New Customer"}
+          </DialogTitle>
         </DialogHeader>
 
         <Formik
           initialValues={{
-            fullName: edit? customer.fullName : "",
-            contactNo: edit? customer.contactNo : "",
-            email: edit? customer.email : "",
-            address: edit? customer.address : "",
-            username: edit? customer.username : "",
-            password: edit? customer.password : ""
+            fullName: edit ? customer.fullName : "",
+            contactNo: edit ? customer.contactNo : "",
+            email: edit ? customer.email : "",
+            address: edit ? customer.address : "",
+            username: edit ? customer.username : "",
+            password: edit ? customer.password : "",
           }}
-
           validate={validateFields}
           onSubmit={handleSubmit}
         >

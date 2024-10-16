@@ -18,14 +18,11 @@ const productSlice = createSlice({
         builder
             .addCase(getAllProducts.pending, (state) => {
                 state.product.isLoading = true;
-                console.log("Loading..");
             })
             .addCase(getAllProducts.fulfilled, (state, action) => {
                 state.product.isLoading = false;
                 state.product.isSuccess = true;
                 state.product.data = action.payload;
-                console.log("Fullfill",action.payload);
-                
             })
             .addCase(getAllProducts.rejected, (state, action) => {
                 state.product.isLoading = false;

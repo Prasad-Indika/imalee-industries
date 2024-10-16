@@ -18,14 +18,11 @@ const completeOrdersSlice = createSlice({
         builder
             .addCase(getCompleteOrders.pending, (state) => {
                 state.order.isLoading = true;
-                console.log("Loading..");
             })
             .addCase(getCompleteOrders.fulfilled, (state, action) => {
                 state.order.isLoading = false;
                 state.order.isSuccess = true;
-                state.order.data = action.payload;
-                console.log("Fullfill",action.payload);
-                
+                state.order.data = action.payload; 
             })
             .addCase(getCompleteOrders.rejected, (state, action) => {
                 state.order.isLoading = false;

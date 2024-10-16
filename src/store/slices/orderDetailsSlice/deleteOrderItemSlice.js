@@ -18,13 +18,11 @@ const deleteOrderItemSlice = createSlice({
         builder
             .addCase(deleteOrderItem.pending, (state) => {
                 state.orderDetail.isLoading = true;
-                console.log("Loading..");
             })
             .addCase(deleteOrderItem.fulfilled, (state, action) => {
                 state.orderDetail.isLoading = false;
                 state.orderDetail.isSuccess = true;
                 state.orderDetail.data = action.payload;
-                console.log("Fullfill",action.payload);
             })
             .addCase(deleteOrderItem.rejected, (state, action) => {
                 state.orderDetail.isLoading = false;

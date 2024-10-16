@@ -2,8 +2,6 @@
 
 import connectToDB from "@/database";
 import Customr from "@/models/Customr";
-// import Custmer from "@/models/Custmer";
-// import Customer from "@/models/Customer";
 
 export async function savecustomerToDB(customer){
 

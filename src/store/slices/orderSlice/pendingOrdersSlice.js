@@ -18,14 +18,11 @@ const pendingOrdersSlice = createSlice({
         builder
             .addCase(getPendingOrders.pending, (state) => {
                 state.order.isLoading = true;
-                console.log("Loading..");
             })
             .addCase(getPendingOrders.fulfilled, (state, action) => {
                 state.order.isLoading = false;
                 state.order.isSuccess = true;
                 state.order.data = action.payload;
-                console.log("Fullfill",action.payload);
-                
             })
             .addCase(getPendingOrders.rejected, (state, action) => {
                 state.order.isLoading = false;
@@ -33,8 +30,6 @@ const pendingOrdersSlice = createSlice({
                 state.order.errorMessage = action.error.message;
             });
     }
-
-
 })
 
 export default pendingOrdersSlice.reducer;

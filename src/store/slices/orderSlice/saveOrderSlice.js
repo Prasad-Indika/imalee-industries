@@ -18,14 +18,11 @@ const saveOrderSlice = createSlice({
         builder
             .addCase(saveOrder.pending, (state) => {
                 state.order.isLoading = true;
-                console.log("Loading..");
             })
             .addCase(saveOrder.fulfilled, (state, action) => {
                 state.order.isLoading = false;
                 state.order.isSuccess = true;
                 state.order.data = action.payload;
-                console.log("Fullfill",action.payload);
-                
             })
             .addCase(saveOrder.rejected, (state, action) => {
                 state.order.isLoading = false;
