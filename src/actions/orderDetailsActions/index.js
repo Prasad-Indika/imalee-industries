@@ -10,7 +10,6 @@ export async function saveOrderItemToDB(order,orderitem){
 
     const { description, qty ,unitPrice,total,status } = orderitem
     
-    
     try {
         await connectToDB();
 
@@ -68,5 +67,92 @@ export async function getItemsByOrderFromDB(order) {
             success:false,
             message:error.message
         }
+    }
+}
+
+export async function updateOrderItemToDB(orderItemId,updateditem){
+
+    const { description, qty ,unitPrice,total,status } = updateditem
+    
+    try {
+        await connectToDB();
+        
+        const updateItem = await Odritm.findByIdAndUpdate(orderItemId,{ description, qty ,unitPrice,total,status},{new:true});
+       
+        if(updateItem){
+            return {
+                success:true,
+                data:JSON.parse(JSON.stringify(updateItem))
+            }
+        }else {
+            return {
+                success:false,
+                message:'Failed to save. Please try again'
+            }
+        }
+
+
+    } catch (error) {
+        return {
+            success:false,
+            message:error.message
+        }
+    }
+}
+
+export async function updateOrderItemStatusToDB(orderItemId){
+    
+    try {
+        await connectToDB();
+        
+        const updateItem = await Odritm.findByIdAndUpdate(orderItemId,{status:'complete'},{new:true});
+       
+        if(updateItem){
+            return {
+                success:true,
+                data:JSON.parse(JSON.stringify(updateItem))
+            }
+        }else {
+            return {
+                success:false,
+                message:'Failed to save. Please try again'
+            }
+        }
+
+
+    } catch (error) {
+        return {
+            success:false,
+            message:error.message
+        }
+    }
+}
+
+export async function deleteOrderItemFromDB(orderItemId,orderId) {
+    try {
+        await connectToDB();
+
+        const deletedItem = await Odritm.findByIdAndDelete(orderItemId);
+
+        await Ordr.findByIdAndUpdate(orderId, {
+            $pull: { orderItems: orderItemId }
+        });
+
+        if (deletedItem) {
+            return {
+                success: true,
+                data: JSON.parse(JSON.stringify(deletedItem))
+            };
+        } else {
+            return {
+                success: false,
+                message: 'Failed to delete the order item'
+            };
+        }
+    } catch (error) {
+        return {
+            success: false,
+            message: error.message
+        };
     }
 }

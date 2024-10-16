@@ -1,5 +1,5 @@
-import { DropDown } from "@/common/components/DropDown"
-import { Button } from "@/components/ui/button"
+import { DropDown } from "@/common/components/DropDown";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -8,12 +8,54 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+} from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Formik } from "formik";
+import FormInputField from "@/common/components/FormInputField";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllUsers, saveUser } from "@/service/User";
 
-export function ModalUserAddUpdate({visible,onClose}) {
+export function ModalUserAddUpdate({ visible, onClose }) {
 
+  const dispatch = useDispatch();
+  const [loader,setLoader] = useState(false);
+  const saveUserData =  useSelector((state)=>state.addUserSlice.user)
+  
+  const validateFields = (values)=>{
+    const errors = {};
+
+    return errors;
+  }
+
+  const handleSubmit = (values, { setSubmitting })=>{
+    setLoader(true);
+    dispatch(saveUser(values))
+    setSubmitting(false)
+  }
+
+  useEffect(()=>{
+    if(loader){
+      if(saveUserData.isSuccess && !saveUserData.isLoading){
+          dispatch(getAllUsers());
+          setLoader(false);
+          onClose();
+      }else{
+          console.log("data Not saved..");
+          setLoader(false);
+      }
+    }
+  },[saveUserData.data,saveUserData.errorMessage])
 
 
   return (
@@ -26,65 +68,117 @@ export function ModalUserAddUpdate({visible,onClose}) {
           <DialogTitle>Add New User</DialogTitle>
         </DialogHeader>
         <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="name" className="text-right">
-              Full Name
-            </Label>
-            <Input
-              //value={"Prasad"}
-              className="col-span-3"
-              onChange={(e)=>{
-                console.log(e.target.value );
-                
-              }}
-            />
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="username" className="text-right">
-              Contact No
-            </Label>
-            <Input
-              className="col-span-3"
-            />
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="username" className="text-right">
-              NIC
-            </Label>
-            <Input
-              className="col-span-3"
-            />
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="username" className="text-right">
-              Username
-            </Label>
-            <Input
-              className="col-span-3"
-            />
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="username" className="text-right">
-              Password
-            </Label>
-            <Input
-              type="password"
-              className="col-span-3"
-            />
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="username" className="text-right">
-              Role
-            </Label>
-            <DropDown
-             
-            />
-          </div>
+          <Formik
+            initialValues={{
+              fullName: "",
+              contactNo: "",
+              nic: "",
+              userName: "",
+              password: "",
+              role: "",
+            }}
+            validate={validateFields}
+            onSubmit={handleSubmit}
+          >
+            {({
+              values,
+              errors,
+              touched,
+              handleChange,
+              handleBlur,
+              handleSubmit,
+              setFieldValue,
+              isSubmitting,
+            }) => (
+              <form onSubmit={handleSubmit}>
+                <div className="grid gap-4 py-4">
+                  <FormInputField
+                    label={"Full Name"}
+                    name={"fullName"}
+                    value={values.fullName}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={errors.fullName}
+                    touched={touched.fullName}
+                  />
+
+                  <FormInputField
+                    label={"Contatct No"}
+                    name={"contactNo"}
+                    value={values.contactNo}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={errors.contactNo}
+                    touched={touched.contactNo}
+                  />
+
+                  <FormInputField
+                    label={"NIC"}
+                    name={"nic"}
+                    value={values.nic}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={errors.nic}
+                    touched={touched.nic}
+                  />
+
+                  <FormInputField
+                    label={"Username"}
+                    name={"userName"}
+                    value={values.userName}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={errors.userName}
+                    touched={touched.userName}
+                  />
+
+                  <FormInputField
+                    type={"password"}
+                    label={"Password"}
+                    name={"password"}
+                    value={values.password}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={errors.password}
+                    touched={touched.password}
+                  />
+                </div>
+
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="name" className="text-right text-[14px]">
+                    Role
+                  </Label>
+
+                  <div className="col-span-3">
+                    <Select
+                      name="role"
+                      value={values.role}
+                      onValueChange={(value) => setFieldValue("role", value)}                 
+                    >
+                      <SelectTrigger className="col-span-3">
+                        <SelectValue placeholder="Select The Role" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Admin">Admin</SelectItem>
+                        <SelectItem value="Staff">Staff</SelectItem>
+                        <SelectItem value="Stock">Stock</SelectItem>
+                      </SelectContent>
+                    </Select>
+
+                  </div>
+                </div>
+
+                <DialogFooter>
+                  <Button type="submit" disabled={isSubmitting}>
+                    Save changes
+                  </Button>
+                </DialogFooter>
+              </form>
+            )}
+          </Formik>
+
         </div>
-        <DialogFooter>
-          <Button type="submit">Save changes</Button>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

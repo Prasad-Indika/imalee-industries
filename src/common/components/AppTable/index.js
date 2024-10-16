@@ -17,7 +17,7 @@ export default function AppTable({columns,data}) {
  
     const [searchQuery, setSearchQuery] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
-    const pageSize = 3;
+    const pageSize = 5;
 
     const handleSearch = (event) => {
          setSearchQuery(event.target.value)

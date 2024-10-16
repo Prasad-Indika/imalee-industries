@@ -51,10 +51,7 @@ export default function OrderHome() {
             paidAmount:val.paidAmount,
             action:(<>
               <div className='flex gap-3'>
-              
-              <AiOutlineArrowRight size={"20px"} onClick={()=>{router.push(`Orders/${val._id}`)}} />
-                {/* <AiOutlineEdit size={"20px"} onClick={()=>{handleEdit(val)}} />
-                <AiOutlineDelete size={"20px"} onClick={()=>{handleDelete(val._id)}}/> */}
+                  <AiOutlineArrowRight size={"20px"} onClick={()=>{router.push(`Orders/${val._id}`)}} />
               </div>
             </>)
           }))
@@ -78,8 +75,12 @@ export default function OrderHome() {
             paidAmount:val.paidAmount,
             action:(<>
               <div className='flex gap-3'>
-                {/* <AiOutlineEdit size={"20px"} onClick={()=>{handleEdit(val)}} />
-                <AiOutlineDelete size={"20px"} onClick={()=>{handleDelete(val._id)}}/> */}
+                  <AiOutlineArrowRight 
+                      size={"20px"} 
+                      onClick={()=>{
+                          router.push(`Orders/${val._id}`)
+                        }} 
+                      />
               </div>
             </>)
           }))

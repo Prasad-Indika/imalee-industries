@@ -17,6 +17,11 @@ import orderSlice from "./slices/orderSlice/orderSlice"
 import pendingOrdersSlice from "./slices/orderSlice/pendingOrdersSlice"
 import completeOrdersSlice from "./slices/orderSlice/completeOrdersSlice"
 import orderItemsByOrderSlice from "./slices/orderDetailsSlice/orderItemsByOrderSlice"
+import updateOrderItemSlice from "./slices/orderDetailsSlice/updateOrderItemSlice"
+import updateOrderItemStatusSlice from "./slices/orderDetailsSlice/updateOrderItemStatusSlice"
+import deleteOrderItemSlice from "./slices/orderDetailsSlice/deleteOrderItemSlice"
+import updateOrderCompleteSlice from "./slices/orderSlice/updateOrderCompleteSlice"
+import orderByIdSlice from "./slices/orderSlice/orderByIdSlice"
 
 export const store = configureStore({
     reducer: {
@@ -36,8 +41,13 @@ export const store = configureStore({
         orderSlice,
         pendingOrdersSlice,
         completeOrdersSlice,
+        updateOrderCompleteSlice,
+        orderByIdSlice,
 
         saveOrderDetailSlice,
         orderItemsByOrderSlice,
+        updateOrderItemSlice,
+        updateOrderItemStatusSlice,
+        deleteOrderItemSlice,
     },
 })

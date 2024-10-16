@@ -1,4 +1,4 @@
-import { getAllOrdersFromDB, getCompleteOrdersFromDB, getPendingOrdersFromDB, saveOrderToDB } from "@/actions/orderActions";
+import { getAllOrdersFromDB, getCompleteOrdersFromDB, getOrderByIdFromDB, getPendingOrdersFromDB, saveOrderToDB, updateOrderCompleteToDB } from "@/actions/orderActions";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 export const saveOrder = createAsyncThunk(
@@ -29,6 +29,22 @@ export const getCompleteOrders = createAsyncThunk(
     'orders/getComplete',
     async () => {
         const response = await getCompleteOrdersFromDB();
+        return response.data;
+    }
+);
+
+export const updateOrderComplete = createAsyncThunk(
+    'orders/update',
+    async ({orderId,updateOrder}) => {
+        const response = await updateOrderCompleteToDB(orderId,updateOrder);
+        return response.data;
+    }
+);
+
+export const getOrderById = createAsyncThunk(
+    'orders/getOrderById',
+    async (orderId) => {
+        const response = await getOrderByIdFromDB(orderId);
         return response.data;
     }
 );

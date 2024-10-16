@@ -44,7 +44,7 @@ export default function LoginHome() {
 
                 >Sign in</Button>
         </div>
-        <div>
+        {/* <div>
             <Button 
                 className='w-full'
                 onClick={()=>{
@@ -52,7 +52,7 @@ export default function LoginHome() {
                 }}
 
                 >Get</Button>
-        </div>
+        </div> */}
     </div>
   )
 }

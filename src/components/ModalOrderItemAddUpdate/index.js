@@ -18,31 +18,38 @@ import FormInputField from "@/common/components/FormInputField"
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { saveOrderItemToDB } from "@/actions/orderDetailsActions"
-import { saveOrderItem } from "@/service/OrderDetails"
+import { getOrderItemByOrder, saveOrderItem, updateOrderItem } from "@/service/OrderDetails"
 
-export function ModalOrderItemAddUpdate({visible,onClose,orderId}) {
+export function ModalOrderItemAddUpdate({visible,onClose,orderId,edit=false,orderItem}) {
 
     const router = useRouter()
     const dispatch = useDispatch();
     const [loader,setLoader] = useState(false)
     const saveOrderItemData = useSelector((state)=>state.saveOrderDetailSlice.orderDetail);
+    const updateOrderItemData = useSelector((state)=>state.updateOrderItemSlice.orderDetail);
 
   
     const handleSubmit = (values, { setSubmitting })=>{
      
         const tot = Number(values.qty) * Number(values.unitPrice)
         const newData = {
-      
           description:values.description,
           qty:values.qty ,
           unitPrice:values.unitPrice,
           total:tot.toString(),
-          status:"pending"
+          status:edit ? orderItem.status : "pending" 
         }
-  
-        setLoader(true);
-        dispatch(saveOrderItem({order:orderId,orderitem:newData}))
-        setSubmitting(true);
+
+        if(edit){
+          setLoader(true);
+          dispatch(updateOrderItem({orderItemId:orderItem._id,updateditem:newData}));
+          setSubmitting(true);
+          
+        }else{
+          setLoader(true);
+          dispatch(saveOrderItem({order:orderId,orderitem:newData}))
+          setSubmitting(true);
+        }
     }
 
     const validateFields = (values)=>{
@@ -58,7 +65,7 @@ export function ModalOrderItemAddUpdate({visible,onClose,orderId}) {
   useEffect(()=>{
     if(loader){
       if(saveOrderItemData.isSuccess && !saveOrderItemData.isLoading){
-         // dispatch(getAllCustomer())
+          dispatch(getOrderItemByOrder(orderId))
           setLoader(false);
           onClose();
       }else{
@@ -68,23 +75,36 @@ export function ModalOrderItemAddUpdate({visible,onClose,orderId}) {
     }
   },[saveOrderItemData.data,saveOrderItemData.errorMessage])
 
+  useEffect(()=>{
+    if(loader){
+      if(updateOrderItemData.isSuccess && !updateOrderItemData.isLoading){
+          dispatch(getOrderItemByOrder(orderId))
+          setLoader(false);
+          onClose();
+      }else{
+          console.log("data Not saved..");
+          setLoader(false);
+      }
+    }
+  },[updateOrderItemData.data,updateOrderItemData.errorMessage])
+
 
   return (
     <Dialog open={visible} onOpenChange={onClose}>
       
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>New Order Item {orderId}</DialogTitle>
+          <DialogTitle>{edit? "Update Item" : "New Order Item"} {orderId}</DialogTitle>
         </DialogHeader>
         <div className="grid gap-4 py-4">
 
 
         <Formik
           initialValues={{
-            description:  "",
-            qty: "",
-            unitPrice: "",
-            status: "pending",
+            description: edit ? orderItem.description :  "",
+            qty: edit ? orderItem.qty : "",
+            unitPrice: edit? orderItem.unitPrice : "",
+            status: edit? orderItem.status : "pending",
           }}
 
           validate={validateFields}
@@ -101,16 +121,6 @@ export function ModalOrderItemAddUpdate({visible,onClose,orderId}) {
           }) => (
             <form onSubmit={handleSubmit}>
               <div className="grid gap-4 py-4">
-
-                {/* <FormInputField
-                  label={"Customer Name"}
-                  name={"customerName"}
-                  value={customer}
-                  onChange={handleCustomerNameChange}
-                  error={customerError}
-                  touched={true}
-                  onBlur={handleBlur}
-                /> */}
 
                 <FormInputField
                   label={"Description"}
@@ -147,7 +157,7 @@ export function ModalOrderItemAddUpdate({visible,onClose,orderId}) {
 
               <DialogFooter>
                 <Button type="submit" disabled={isSubmitting}>
-                  Create Order
+                  {edit?"Update" : "Add Item"}
                 </Button>
               </DialogFooter>
             </form>

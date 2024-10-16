@@ -44,7 +44,7 @@ export function ModalOrderAdd({visible,onClose}) {
     const handleSubmit = (values, { setSubmitting })=>{
      
         setLoader(true);
-        dispatch(saveOrder({customer:'670d222a5a6f4ffaf9c30ea2',order:values}));  
+        dispatch(saveOrder({customer:'670de5ca5a6f4ffaf9c311e8',order:values}));  
         setSubmitting(true); 
     }
 
